@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  mysql-database:
+    image: 'mysql'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=medicalstoresdb
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-room:/var/lib/mysql
+  docker-container-medicalstore:
+    image: medicalstore.jar
+    ports:
+      - "9999:8889"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-database:3306/medicalstoresdb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    build:
+      context: "./"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - mysql-database
+      
+volumes:
+  mysql-room:
+  
